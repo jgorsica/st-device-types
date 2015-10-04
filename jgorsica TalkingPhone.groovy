@@ -3,17 +3,17 @@
  *
  *  Author: John Gorsica
  *
- *Speech Synthesis sends a command to the talking phone via AutoRemote Plugin for Tasker
+ *Speech Synthesis sends a command to the talking phone via SharpTools Plugin for Tasker
  *Speech Recognition is done by AutoVoice tasker plugin on device and then set in this device via SharpTools Tasker Plugin command call.
  *Playlist (or song or genre or radio) set in this device via SharpTools Tasker Plugin command call.
- *Music control for this phone performed by sending a command to the talking phone via AutoRemote Plugin for Tasker
+ *Music control for this phone performed by sending a command to the talking phone via SharpTools Plugin for Tasker
  *Music state and current track are sent from Media Utilities Plugin via SharpTools Plugin
  *
  */
  
 preferences {
-    input("autoRemoteKey", "string", title:"Enter AutoRemote Key:",
-        required:true, displayDuringSetup: true)
+    //input("autoRemoteKey", "string", title:"Enter AutoRemote Key:",
+    //    required:true, displayDuringSetup: true)
 }
 
 metadata {
@@ -32,7 +32,7 @@ metadata {
 
 	// Main
     standardTile("main", "device.status", inactiveLabel:false, decoration:"flat") {
-            state "default", label:"Phone", icon:"http://statusbits.github.io/icons/vlcthing.png", action:"__testTTS"
+            state "default", label:"Phone", icon:"st.People.people11", action:"__testTTS"
     }
     standardTile("play", "device.status", width: 1, height: 1, decoration: "flat") {
 		state "default", label:'', action:"music Player.play", icon:"st.sonos.play-btn", nextState:"playing", backgroundColor:"#ffffff"
@@ -72,11 +72,8 @@ metadata {
 }
 
 def sendCommandToPhone(header, command) {
-	def site = 'https://autoremotejoaomgcd.appspot.com/sendmessage?key='
-    def messageField = '&ttl=30&message='
-    def message = URLEncoder.encode(header + "=:=" + command, "UTF-8")
-    httpGet(site + autoRemoteKey + messageField + message)
-    	log.trace site + autoRemoteKey + messageField + message
+    def temp = header + "=:=" + command
+    sendEvent(name:"commandToPhone",value:temp,isStateChange:true)
 }
 
 def speak(text) {
